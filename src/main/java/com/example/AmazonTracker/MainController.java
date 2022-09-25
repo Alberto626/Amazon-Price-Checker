@@ -24,11 +24,12 @@ public class MainController {
     @PostMapping(path="/add") // Map ONLY POST Requests
     public String addNewUser (@RequestParam String url) {
         // @RequestParam means it is a parameter from the GET or POST request
-        if(validateURL(url)) {//doesnt work
-            String world = "im here";
-            System.out.println(world);
+        if(validateURL(url)) {
+            //add alert here saying url is invalid
             return "redirect:/demo/greet";
         }
+        //validate this is from amazon
+
         String title = null;
         double price = -1;
         String imgURL = null;
@@ -39,6 +40,10 @@ public class MainController {
                     .header("Accept-Language", "gzip, deflate, br")
                     .header("Accept-Encoding", "en-US,en;q=0.9")
                     .get();
+            if(!soldByAmazon(doc)) {
+                //add alert saying not sold by amazon
+                return "redirect:/demo/greet";
+            }
             title = findTitle(doc);
             price = findPrice(doc);
             imgURL = findImageURL(doc);
@@ -77,6 +82,18 @@ public class MainController {
     public void scheduledWebCall() {
         System.out.println("hello world");
         //make the webscape call here after a fixed amount of time
+    }
+    public boolean soldByAmazon(Document doc) {
+        Element isAmazon = doc.select("#tabular-buybox > div.tabular-buybox-container > div:nth-child(4) > div > span").first();
+        if(isAmazon == null) {
+            //add more methods if sold by amazon but not recognized
+            return false;//notsoldbyAmazon
+        }
+        else if (isAmazon.text().toLowerCase().contains("amazon.com")) {
+            return true; //good
+        }
+        return false; // found but not sold by amazon
+
     }
     public String findImageURL(Document doc) {
         Element imgURL = doc.select("#landingImage").first();
@@ -117,7 +134,7 @@ public class MainController {
         return sPrice;
     }
     public boolean validateURL(String url) {
-        if(!url.contains("amazon.com")) {//validate website, must be Amazon
+        if(!url.contains("amazon.com") || !url.contains("Amazon.com")) {//validate website, must be Amazon
             try {
                 File logs = new File("logs.txt");
                 FileWriter output = new FileWriter(logs,true);
