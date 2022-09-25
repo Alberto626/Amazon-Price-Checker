@@ -25,34 +25,43 @@ public class MainController {
     public String addNewUser (@RequestParam String url) {
         // @RequestParam means it is a parameter from the GET or POST request
         if(validateURL(url)) {//doesnt work
+            String world = "im here";
+            System.out.println(world);
             return "redirect:/demo/greet";
         }
         String title = null;
         double price = -1;
+        String imgURL = null;
         try {
-            Document doc = Jsoup.connect(url).get();
-            title = findTitle(doc, url);
-            price = findPrice(doc, url);
-            File logs = new File("logs.txt");
-            FileWriter output = new FileWriter(logs,true);
-
-
-            if(title == null || price == -1) {
+            String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36";
+            Document doc = Jsoup.connect(url)
+                    .userAgent(userAgent)
+                    .header("Accept-Language", "gzip, deflate, br")
+                    .header("Accept-Encoding", "en-US,en;q=0.9")
+                    .get();
+            title = findTitle(doc);
+            price = findPrice(doc);
+            imgURL = findImageURL(doc);
+            if(title == null || price == -1 || imgURL == null) {
+                File logs = new File("logs.txt");
+                FileWriter output = new FileWriter(logs,true);
                 output.write(url);
-                output.write(": title or price cannot be found\n");
+                output.write(": title,price, or image cannot be found\n");
                 output.close();
                 return "redirect:/demo/greet";
             }
         }
         catch(FileNotFoundException e) { //doc
             e.printStackTrace();
+            return "redirect:/demo/greet";
         }
         catch(IOException e) {
             e.printStackTrace();
+            return "redirect:/demo/greet";
         }
         User n = new User();
-        n.setTitle("saved");
-        n.setPrice(1);
+        n.setTitle(title);
+        n.setPrice(price);
         n.setUrl(url);
         n.setCreated_at(new Date());
         n.setUpdated_at(new Date());
@@ -69,27 +78,43 @@ public class MainController {
         System.out.println("hello world");
         //make the webscape call here after a fixed amount of time
     }
-    public String findTitle(Document doc, String url){
+    public String findImageURL(Document doc) {
+        Element imgURL = doc.select("#landingImage").first();
+        if(imgURL == null) {
+            imgURL = doc.select("#imgBlkFront").first();
+            if(imgURL == null) {
+                return null;
+            }
+            return imgURL.absUrl("src");
+        }
+        return imgURL.absUrl("src");
+    }
+    public String findTitle(Document doc){
         Element productTitle = doc.getElementById("productTitle");
         if(productTitle == null) {
             //try new method of finding product title, also if problem occurs then keep a log of it
-            try {
-                File logs = new File("logs.txt");
-                FileWriter output = new FileWriter(logs,true);
-                output.write(url);
-                output.write(": Url is invalid\n");
-                output.close();
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-            }
             return null;
         }
         return productTitle.text();
     }
-    public double findPrice(Document doc, String url)
-    {
-        return -1;
+    public double findPrice(Document doc) {
+        Element price = doc.getElementById("price");//jujutsu kaisen manga
+        if(price == null) {
+            price = doc.select("#corePrice_feature_div > div > span > span:nth-child(2)").first(); // you have to the right to remain innocent
+            if(price == null) {
+                price = doc.select("#corePrice_feature_div > div > span.a-price.a-text-price.header-price.a-size-base.a-text-normal.a-color-price > span:nth-child(2)").first(); // one-time purchase
+                if(price == null) {
+                    return -1; //if nothing else works
+                }
+                double sPrice = Double.parseDouble(price.text().substring(1));
+                return sPrice;
+            }
+            double sPrice = Double.parseDouble(price.text().substring(1));
+            return sPrice;
+            //try more methods
+        }
+        double sPrice = Double.parseDouble(price.text().substring(1));
+        return sPrice;
     }
     public boolean validateURL(String url) {
         if(!url.contains("amazon.com")) {//validate website, must be Amazon
