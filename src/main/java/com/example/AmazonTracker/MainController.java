@@ -13,6 +13,8 @@ import java.util.Date;
 import org.springframework.ui.Model;
 import org.jsoup.*;
 import org.jsoup.nodes.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.io.File;
 @Controller // This means that this class is a Controller
 @RequestMapping(path="/demo") // This means URL's start with /demo (after Application path)
@@ -22,10 +24,11 @@ public class MainController {
     private UserRepository userRepository;
 
     @PostMapping(path="/add") // Map ONLY POST Requests
-    public String addNewUser (@RequestParam String url) {
+    public String addNewUser (@RequestParam String url, RedirectAttributes redirAttrs) {
         // @RequestParam means it is a parameter from the GET or POST request
         if(validateURL(url)) {
             //add alert here saying url is invalid
+            redirAttrs.addFlashAttribute("message", "Website is invalid");
             return "redirect:/demo/greet";
         }
         //validate this is from amazon
@@ -41,7 +44,7 @@ public class MainController {
                     .header("Accept-Encoding", "en-US,en;q=0.9")
                     .get();
             if(!soldByAmazon(doc)) {
-                //add alert saying not sold by amazon
+                redirAttrs.addFlashAttribute("message", "Product MUST be sold by Amazon");//error message
                 return "redirect:/demo/greet";
             }
             title = findTitle(doc);
@@ -53,15 +56,18 @@ public class MainController {
                 output.write(url);
                 output.write(": title,price, or image cannot be found\n");
                 output.close();
+                redirAttrs.addFlashAttribute("message", "Image/price/title cannot be found");
                 return "redirect:/demo/greet";
             }
         }
         catch(FileNotFoundException e) { //doc
             e.printStackTrace();
+            redirAttrs.addFlashAttribute("message", "File Not found Exception");
             return "redirect:/demo/greet";
         }
         catch(IOException e) {
             e.printStackTrace();
+            redirAttrs.addFlashAttribute("message", "IO Exception");
             return "redirect:/demo/greet";
         }
         User n = new User();
