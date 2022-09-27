@@ -13,3 +13,4 @@ public class AmazonTrackerApplication {
 	}
 
 }
+//TODO change application properties to drop the table and create a new one to add new changes to database structure

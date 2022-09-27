@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Date;
 
 @Entity // This tells Hibernate to make a table out of this class
 public class User {
@@ -16,10 +15,15 @@ public class User {
     private String title;
     private double price;
     private String url;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date created_at;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private Date updated_at;
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
+
+    private String imgPath;
 
     public Integer getId() {
         return id;
@@ -53,19 +57,5 @@ public class User {
         this.url = url;
     }
 
-    public Date getCreated_at() {
-        return created_at;
-    }
 
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
-    }
-
-    public Date getUpdated_at() {
-        return updated_at;
-    }
-
-    public void setUpdated_at(Date updated_at) {
-        this.updated_at = updated_at;
-    }
 }

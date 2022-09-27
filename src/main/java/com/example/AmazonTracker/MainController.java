@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
 import org.springframework.ui.Model;
 import org.jsoup.*;
 import org.jsoup.nodes.*;
@@ -26,11 +25,12 @@ public class MainController {
     @PostMapping(path="/add") // Map ONLY POST Requests
     public String addNewUser (@RequestParam String url, RedirectAttributes redirAttrs) {
         // @RequestParam means it is a parameter from the GET or POST request
-        if(validateURL(url)) {
+        if(validateURL(url)) { //TODO add a separate method here to check for duplicates
             //add alert here saying url is invalid
             redirAttrs.addFlashAttribute("message", "Website is invalid");
             return "redirect:/demo/greet";
         }
+        //TODO check if url already exists in database
         //validate this is from amazon
 
         String title = null;
@@ -49,7 +49,7 @@ public class MainController {
             }
             title = findTitle(doc);
             price = findPrice(doc);
-            imgURL = findImageURL(doc);
+            imgURL = findImageURL(doc);// NO HOT LINKING
             if(title == null || price == -1 || imgURL == null) {
                 File logs = new File("logs.txt");
                 FileWriter output = new FileWriter(logs,true);
@@ -59,6 +59,7 @@ public class MainController {
                 redirAttrs.addFlashAttribute("message", "Image/price/title cannot be found");
                 return "redirect:/demo/greet";
             }
+            //TODO DOWNLOAD and STORE images to a Photos folder. should be ID_img.jpg
         }
         catch(FileNotFoundException e) { //doc
             e.printStackTrace();
@@ -74,8 +75,7 @@ public class MainController {
         n.setTitle(title);
         n.setPrice(price);
         n.setUrl(url);
-        n.setCreated_at(new Date());
-        n.setUpdated_at(new Date());
+        //TODO add url image path
         userRepository.save(n);
         return "redirect:/demo/greet";
     }
