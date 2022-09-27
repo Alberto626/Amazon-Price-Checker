@@ -10,13 +10,13 @@
     <input type="submit" value="Submit"><br>
 </form>
 <p th:text="'Hello, ' + ${name} + '!'" />
-<!--
-<div th:text = "${message}"/>
-    this is error message from flash attribute, lifespan is dead after one use
-    learn to make this as an Alert function
--->
+
 </body>
-<script>
+<script th:inline = "javascript">
+    var msg = [[${message}]]
+    if(msg != null) {
+        alert(msg);
+    }
 
 
 </script>

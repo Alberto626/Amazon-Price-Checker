@@ -82,6 +82,7 @@ public class MainController {
     @GetMapping(path="/greet")
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
         model.addAttribute("name", name); //add this to templates
+        //add all database stuff to add Attribute
         return "demo"; //go to template name
     }
     //@Scheduled(fixedRate = 5000)
