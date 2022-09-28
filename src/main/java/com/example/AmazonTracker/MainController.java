@@ -80,6 +80,7 @@ public class MainController {
         n.setUrl(url);
         n.setImgPath("Photos/"+ (userRepository.count() + 1) + ".jpg"); //TODO Fix this when delete function is added
         userRepository.save(n);
+        //TODO change the user, remove imgPath. save to userRepo first then download and save based on latest entry(PRIMARY KEY) in database
 
         return "redirect:/demo/greet";
     }

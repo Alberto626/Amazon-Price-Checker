@@ -6,3 +6,5 @@ Taking much longer than expected.
 - Learn if website is open to sql injection
 - add microservice to add notification system
 - add scheduled method to webscrape website
+
+##TO MAKE THIS WORK ON YOUR COMPUTER CHANGE APPLICATION.PROPERTIES

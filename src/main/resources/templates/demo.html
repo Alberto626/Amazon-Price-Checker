@@ -14,10 +14,18 @@
 
 </body>
 <script th:inline = "javascript">
-    var msg = [[${message}]]
-    var allData = [[${allData}]]
-    var ele = document.getElementById("data")
-    ele.innerHTML = typeof allData
+    var msg = [[${message}]];
+    var allData = [[${allData}]];
+    var ele = document.getElementById("data");
+    ele.innerHTML = typeof allData;
+    for(let i = 0; i < allData.length; i++) {
+        //allData[i].id
+        //allData[i].imgPath //remove this from column to fix
+        //allData[i].price
+        //allData[i].title
+        //allData[i].url
+    }
+
     if(msg != null) {
         alert(msg);
     }
