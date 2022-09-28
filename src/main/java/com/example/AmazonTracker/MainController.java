@@ -1,5 +1,8 @@
 package com.example.AmazonTracker;
-
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.io.FileOutputStream;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,8 +33,6 @@ public class MainController {
             redirAttrs.addFlashAttribute("message", "Website is invalid");
             return "redirect:/demo/greet";
         }
-        //TODO check if url already exists in database
-        //validate this is from amazon
 
         String title = null;
         double price = -1;
@@ -59,7 +60,6 @@ public class MainController {
                 redirAttrs.addFlashAttribute("message", "Image/price/title cannot be found");
                 return "redirect:/demo/greet";
             }
-            //TODO DOWNLOAD and STORE images to a Photos folder. should be ID_img.jpg
         }
         catch(FileNotFoundException e) { //doc
             e.printStackTrace();
@@ -71,12 +71,17 @@ public class MainController {
             redirAttrs.addFlashAttribute("message", "IO Exception");
             return "redirect:/demo/greet";
         }
+
+
         User n = new User();
+        storeAndSave(n.getId(), imgURL); // download and save
+        //imgURL = "Photos/PRIMARYKEY.jpg"
+        //TODO n.getID() does not work, User does not create ID until its stored in database
         n.setTitle(title);
         n.setPrice(price);
         n.setUrl(url);
-        //TODO add url image path
         userRepository.save(n);
+
         return "redirect:/demo/greet";
     }
     @GetMapping(path="/greet")
@@ -141,7 +146,7 @@ public class MainController {
         return sPrice;
     }
     public boolean validateURL(String url) {
-        if(!url.contains("amazon.com") || !url.contains("Amazon.com")) {//validate website, must be Amazon
+        if(!url.contains("amazon.com")) {//validate website, must be Amazon
             try {
                 File logs = new File("logs.txt");
                 FileWriter output = new FileWriter(logs,true);
@@ -155,5 +160,28 @@ public class MainController {
             return true;
         }
         return false;
+    }
+    public boolean isCopy(String url) { //TODO learn to find specific column value in database
+        return false;
+    }
+    public void storeAndSave(int id, String imgURL) {//id comes from the new User, this will give it a unique name
+        try {
+            String destinationFile = "Photos/" + id + ".jpg";
+            URL url = new URL(imgURL);
+            InputStream is = url.openStream();
+            OutputStream os = new FileOutputStream(destinationFile);
+
+            byte[] b = new byte[2048];
+            int length;
+
+            while ((length = is.read(b)) != -1) {
+                os.write(b, 0, length);
+            }
+
+            is.close();
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }
