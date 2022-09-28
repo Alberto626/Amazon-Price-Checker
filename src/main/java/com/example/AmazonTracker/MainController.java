@@ -26,13 +26,13 @@ public class MainController {
     private UserRepository userRepository;
 
     @PostMapping(path="/add") // Map ONLY POST Requests
-    public String addNewUser (@RequestParam String url, RedirectAttributes redirAttrs) {
+    public String addNewUser (@RequestParam String url, RedirectAttributes redirAttrs) {//learn to send this through the body and not the parmas
         // @RequestParam means it is a parameter from the GET or POST request
         if(validateURL(url)) { //TODO add a separate method here to check for duplicates
-            //add alert here saying url is invalid
             redirAttrs.addFlashAttribute("message", "Website is invalid");
             return "redirect:/demo/greet";
         }
+        //TODO check if URL is too long
 
         String title = null;
         double price = -1;
@@ -45,12 +45,12 @@ public class MainController {
                     .header("Accept-Encoding", "en-US,en;q=0.9")
                     .get();
             if(!soldByAmazon(doc)) {
-                redirAttrs.addFlashAttribute("message", "Product MUST be sold by Amazon");//error message
+                redirAttrs.addFlashAttribute("message", "Product MUST be sold by Amazon");
                 return "redirect:/demo/greet";
             }
             title = findTitle(doc);
             price = findPrice(doc);
-            imgURL = findImageURL(doc);// NO HOT LINKING
+            imgURL = findImageURL(doc);//amazon url
             if(title == null || price == -1 || imgURL == null) {
                 File logs = new File("logs.txt");
                 FileWriter output = new FileWriter(logs,true);
@@ -74,24 +74,28 @@ public class MainController {
 
 
         User n = new User();
-        storeAndSave(userRepository.count() + 1, imgURL); // download and save
+        storeAndSave(userRepository.count() + 1, imgURL); //Prevent hotlinking
         n.setTitle(title);
         n.setPrice(price);
         n.setUrl(url);
-        n.setImgPath("Photos/"+ userRepository.count() + ".jpg");
+        n.setImgPath("Photos/"+ (userRepository.count() + 1) + ".jpg"); //TODO Fix this when delete function is added
         userRepository.save(n);
 
         return "redirect:/demo/greet";
     }
+    @GetMapping(path="/world")
+    public @ResponseBody Iterable<User> world() { //STRICTLY FOR TESTING
+        return userRepository.findAll();
+    }
     @GetMapping(path="/greet")
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
         model.addAttribute("name", name); //add this to templates
+        model.addAttribute("allData",userRepository.findAll());
         //add all database stuff to add Attribute
         return "demo"; //go to template name
     }
     //@Scheduled(fixedRate = 5000)
     public void scheduledWebCall() {
-        System.out.println("hello world");
         //make the webscape call here after a fixed amount of time
     }
     public boolean soldByAmazon(Document doc) {
