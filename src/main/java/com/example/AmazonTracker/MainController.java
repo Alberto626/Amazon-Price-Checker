@@ -74,12 +74,11 @@ public class MainController {
 
 
         User n = new User();
-        storeAndSave(n.getId(), imgURL); // download and save
-        //imgURL = "Photos/PRIMARYKEY.jpg"
-        //TODO n.getID() does not work, User does not create ID until its stored in database
+        storeAndSave(userRepository.count() + 1, imgURL); // download and save
         n.setTitle(title);
         n.setPrice(price);
         n.setUrl(url);
+        n.setImgPath("Photos/"+ userRepository.count() + ".jpg");
         userRepository.save(n);
 
         return "redirect:/demo/greet";
@@ -164,7 +163,7 @@ public class MainController {
     public boolean isCopy(String url) { //TODO learn to find specific column value in database
         return false;
     }
-    public void storeAndSave(int id, String imgURL) {//id comes from the new User, this will give it a unique name
+    public void storeAndSave(long id, String imgURL) {//id comes from the new User, this will give it a unique name
         try {
             String destinationFile = "Photos/" + id + ".jpg";
             URL url = new URL(imgURL);
