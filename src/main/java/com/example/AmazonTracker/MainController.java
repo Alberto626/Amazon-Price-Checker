@@ -18,6 +18,7 @@ import org.jsoup.nodes.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
+
 @Controller // This means that this class is a Controller
 @RequestMapping(path="/demo") // This means URL's start with /demo (after Application path)
 public class MainController {
@@ -83,6 +84,24 @@ public class MainController {
 
         return "redirect:/demo/greet";
     }
+    @DeleteMapping(path = "/delete")
+     public String delete(@RequestParam(name = "id") String id, RedirectAttributes redirAttrs) {
+        int deleteId = 0;
+        try {
+            deleteId = Integer.parseInt(id);
+        }
+        catch(NumberFormatException ex) {
+            redirAttrs.addFlashAttribute("message", "Invalid parameter");
+            return "redirect:demo/greet";
+        }
+        if(userRepository.findById(deleteId) == null) {
+            redirAttrs.addFlashAttribute("message", "This Entry does not exist");
+            return "redirect:demo/greet";
+        }
+        userRepository.deleteById(deleteId);
+        return "redirect:demo/greet";
+    }
+
     @GetMapping(path="/world")
     public @ResponseBody Iterable<User> world() { //STRICTLY FOR TESTING
         return userRepository.findAll();
@@ -169,7 +188,7 @@ public class MainController {
     }
     public void storeAndSave(long id, String imgURL) {//id comes from the new User, this will give it a unique name
         try {
-            String destinationFile = "Photos/" + id + ".jpg";
+            String destinationFile = "src/main/resources/static/images/" + id + ".jpg";
             URL url = new URL(imgURL);
             InputStream is = url.openStream();
             OutputStream os = new FileOutputStream(destinationFile);

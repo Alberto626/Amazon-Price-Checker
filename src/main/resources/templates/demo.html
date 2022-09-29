@@ -10,26 +10,30 @@
     <input type="submit" value="Submit"><br>
 </form>
 <p th:text="'Hello, ' + ${name} + '!'" />
+<p>IMAGES ARE BUGGED, USED DEFAULT IMAGES</p>
 <div id = "data"></div>
+
 
 </body>
 <script th:inline = "javascript">
     var msg = [[${message}]];
     var allData = [[${allData}]];
     var ele = document.getElementById("data");
-
-    alert(window.location.pathname);
     for(let i = 0; i < allData.length; i++) { //this will be used to display
         let d = document.createElement("div"); //section here
 
         let img = document.createElement("img");
-        img.setAttribute("src", "/Photos/" + (allData[i].id) + ".jpg");// fix this to get image path from folder
+        //img.setAttribute("src", "/images/" + (allData[i].id) + ".jpg"); //fix this later for dynamic images
+        img.setAttribute("src", "/images/default.jpg");
+        img.setAttribute("width", "100");
+        img.setAttribute("height", "100");
 
-        let title = document.createElement("q");
+        let title = document.createElement("a");
+        title.setAttribute("href", allData[i].url);
         title.innerHTML = allData[i].title;
 
         let price = document.createElement("b"); // bold
-        price.innerHTML = "$" + allData[i].price;
+        price.innerHTML = "     $" + allData[i].price;
 
         d.append(img, title, price);
         ele.appendChild(d);
