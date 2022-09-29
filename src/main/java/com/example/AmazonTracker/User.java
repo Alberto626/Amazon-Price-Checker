@@ -15,15 +15,6 @@ public class User {
     private String title;
     private double price;
     private String url;
-    public String getImgPath() {
-        return imgPath;
-    }
-
-    public void setImgPath(String imgPath) {
-        this.imgPath = imgPath;
-    }
-
-    private String imgPath;
 
     public Integer getId() {
         return id;

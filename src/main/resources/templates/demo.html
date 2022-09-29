@@ -10,20 +10,30 @@
     <input type="submit" value="Submit"><br>
 </form>
 <p th:text="'Hello, ' + ${name} + '!'" />
-<h1 id = "data"></h1>
+<div id = "data"></div>
 
 </body>
 <script th:inline = "javascript">
     var msg = [[${message}]];
     var allData = [[${allData}]];
     var ele = document.getElementById("data");
-    ele.innerHTML = typeof allData;
-    for(let i = 0; i < allData.length; i++) {
-        //allData[i].id
-        //allData[i].imgPath //remove this from column to fix
-        //allData[i].price
-        //allData[i].title
-        //allData[i].url
+
+    alert(window.location.pathname);
+    for(let i = 0; i < allData.length; i++) { //this will be used to display
+        let d = document.createElement("div"); //section here
+
+        let img = document.createElement("img");
+        img.setAttribute("src", "/Photos/" + (allData[i].id) + ".jpg");// fix this to get image path from folder
+
+        let title = document.createElement("q");
+        title.innerHTML = allData[i].title;
+
+        let price = document.createElement("b"); // bold
+        price.innerHTML = "$" + allData[i].price;
+
+        d.append(img, title, price);
+        ele.appendChild(d);
+
     }
 
     if(msg != null) {

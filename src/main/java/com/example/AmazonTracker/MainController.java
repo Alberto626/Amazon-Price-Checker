@@ -74,20 +74,19 @@ public class MainController {
 
 
         User n = new User();
-        storeAndSave(userRepository.count() + 1, imgURL); //Prevent hotlinking
         n.setTitle(title);
         n.setPrice(price);
         n.setUrl(url);
-        n.setImgPath("Photos/"+ (userRepository.count() + 1) + ".jpg"); //TODO Fix this when delete function is added
-        userRepository.save(n);
-        //TODO change the user, remove imgPath. save to userRepo first then download and save based on latest entry(PRIMARY KEY) in database
+        userRepository.save(n); //this will make n have an unique id, and help correspond image naming
+        storeAndSave(n.getId(), imgURL); //Prevent hotlinking
+        userRepository.save(n);//update and save
 
         return "redirect:/demo/greet";
     }
     @GetMapping(path="/world")
     public @ResponseBody Iterable<User> world() { //STRICTLY FOR TESTING
         return userRepository.findAll();
-    }
+    } // THIS IS PURELY TESTING
     @GetMapping(path="/greet")
     public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
         model.addAttribute("name", name); //add this to templates
@@ -103,7 +102,7 @@ public class MainController {
         Element isAmazon = doc.select("#tabular-buybox > div.tabular-buybox-container > div:nth-child(4) > div > span").first();
         if(isAmazon == null) {
             //add more methods if sold by amazon but not recognized
-            return false;//notsoldbyAmazon
+            return false;//not sold by Amazon
         }
         else if (isAmazon.text().toLowerCase().contains("amazon.com")) {
             return true; //good
@@ -188,4 +187,6 @@ public class MainController {
             ex.printStackTrace();
         }
     }
+    //delete function goes here. id will be passed through. contemplate the possibility of deleting images as well
+
 }

@@ -13,3 +13,4 @@ public class AmazonTrackerApplication {
 	}
 
 }
+//TODO add .env, spring secret managements
