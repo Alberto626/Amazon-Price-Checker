@@ -18,6 +18,7 @@ import org.jsoup.nodes.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 @Controller // This means that this class is a Controller
 @RequestMapping(path="/demo") // This means URL's start with /demo (after Application path)
@@ -113,9 +114,29 @@ public class MainController {
         //add all database stuff to add Attribute
         return "demo"; //go to template name
     }
-    //@Scheduled(fixedRate = 5000)
+    //@Scheduled(cron = "0 0 8 * *")// every day at 8
     public void scheduledWebCall() {
-        //make the webscape call here after a fixed amount of time
+        Iterable<User> i = userRepository.findAll();
+        for(User u : i) {
+            //delay after x time to prevent getting banned
+            try {
+                TimeUnit.MINUTES.sleep(5);// change timeout
+                String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36";
+                Document doc = Jsoup.connect(u.getUrl())
+                        .userAgent(userAgent)
+                        .header("Accept-Language", "gzip, deflate, br")
+                        .header("Accept-Encoding", "en-US,en;q=0.9")
+                        .get();
+                if(findPrice(doc) < u.getPrice()) {
+                    //send notification here
+                }
+            }
+            catch(Exception ex) {
+
+            }
+
+        }
+
     }
     public boolean soldByAmazon(Document doc) {
         Element isAmazon = doc.select("#tabular-buybox > div.tabular-buybox-container > div:nth-child(4) > div > span").first();
