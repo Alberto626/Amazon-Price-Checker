@@ -84,22 +84,22 @@ public class MainController {
 
         return "redirect:/demo/greet";
     }
-    @DeleteMapping(path = "/delete")
-     public String delete(@RequestParam(name = "id") String id, RedirectAttributes redirAttrs) {
+    @PostMapping(path = "/delete")
+     public String delete(@RequestParam String id, RedirectAttributes redirAttrs) {
         int deleteId = 0;
         try {
             deleteId = Integer.parseInt(id);
         }
         catch(NumberFormatException ex) {
             redirAttrs.addFlashAttribute("message", "Invalid parameter");
-            return "redirect:demo/greet";
+            return "redirect:/demo/greet";
         }
         if(userRepository.findById(deleteId) == null) {
             redirAttrs.addFlashAttribute("message", "This Entry does not exist");
-            return "redirect:demo/greet";
+            return "redirect:/demo/greet";
         }
         userRepository.deleteById(deleteId);
-        return "redirect:demo/greet";
+        return "redirect:/demo/greet";
     }
 
     @GetMapping(path="/world")

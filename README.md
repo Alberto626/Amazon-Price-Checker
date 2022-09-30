@@ -1,8 +1,8 @@
 # Amazon-Price-Checker
 Taking much longer than expected.
-- Finish front end, display data to html page using thymeleaf
+- Finish front end, display data to html page using thymeleaf &check;
 - add bootstrap to have a cleaner front end.(Low prio)
-- add delete function in main controller
+- add delete function in main controller &check;
 - Finish url validation, must include duplicate website
 - Learn if website is open to sql injection
 - add microservice to add notification system

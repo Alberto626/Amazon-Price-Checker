@@ -5,14 +5,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
+<p th:text="'Hello, ' + ${name} + '!'" />
+<p>IMAGES ARE BUGGED, USED DEFAULT IMAGES</p>
 <form action="add" method="post">
     <input type="text" name="url"><br>
     <input type="submit" value="Submit"><br>
 </form>
-<p th:text="'Hello, ' + ${name} + '!'" />
-<p>IMAGES ARE BUGGED, USED DEFAULT IMAGES</p>
 <div id = "data"></div>
-
 
 </body>
 <script th:inline = "javascript">
@@ -35,8 +34,23 @@
         let price = document.createElement("b"); // bold
         price.innerHTML = "     $" + allData[i].price;
 
-        d.append(img, title, price);
-        ele.appendChild(d);
+        let form = document.createElement("form");
+        form.setAttribute("action", "delete");
+        form.setAttribute("method", "post");
+
+        let hidden = document.createElement("input");
+        hidden.setAttribute("type", "hidden");
+        hidden.setAttribute("name", "id");
+        hidden.setAttribute("value", allData[i].id);
+
+        let button = document.createElement("input");
+        button.setAttribute("type", "submit");
+        button.setAttribute("value", "Delete");
+
+        form.append(hidden, button);
+
+        d.append(img, title, price, form);
+        ele.append(d);
 
     }
 
