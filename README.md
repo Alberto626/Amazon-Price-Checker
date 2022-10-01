@@ -5,10 +5,27 @@ Taking much longer than expected.
 - add delete function in main controller &check;
 - Finish url validation, must include duplicate website
 - Learn if website is open to sql injection
-- add microservice to add notification system
 - add scheduled method to webscrape website
 - add secrets management .env file
 - Fix spring from caching static images and preventing new images from being displayed
 - Debug naming conventions on images unqiue to Primary KEY &check;
 
-##TO MAKE THIS WORK ON YOUR COMPUTER CHANGE APPLICATION.PROPERTIES. More  details later
+Create an applications.properties in resources directory to make it run on your computer, make sure to have mysql installed
+
+<pre>
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.datasource.url=   example: jdbc:mysql://localhost:3306/#yourschema
+spring.datasource.username= #your mysql name
+spring.datasource.password= #password
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+#spring.jpa.show-sql: true
+
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.timeout=5000
+spring.mail.properties.mail.smtp.starttls.enable=true
+toSend = //an email to send to
+spring.mail.username= #an email sending
+spring.mail.password= #sender password
+</pre>
