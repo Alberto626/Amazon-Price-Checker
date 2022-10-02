@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,8 @@ import org.springframework.ui.Model;
 import org.jsoup.*;
 import org.jsoup.nodes.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
@@ -118,7 +121,7 @@ public class MainController {
         //add all database stuff to add Attribute
         return "demo"; //go to template name
     }
-    //@Scheduled(fixedRate = 25000) //uncomment this to test this
+    @Scheduled(fixedRate = 25000) //uncomment this to test this
     public void sendMessage() {//THIS IS PURELY FOR TESTING PURPOSES
 
         SimpleMailMessage message = new SimpleMailMessage();
@@ -142,8 +145,13 @@ public class MainController {
                         .header("Accept-Encoding", "en-US,en;q=0.9")
                         .get();
                 if(findPrice(doc) < u.getPrice()) {
-                    //send notification here
+                    MimeMessage msg = javaMailSender.createMimeMessage();
+                    MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+                    helper.setSubject("SALE!!");
+                    helper.setText("<a href = '" + u.getUrl() + "'>" + u.getTitle() + "</a>");
+                    javaMailSender.send(msg);
                 }
+                //do nothing
             }
             catch(Exception ex) {
 
