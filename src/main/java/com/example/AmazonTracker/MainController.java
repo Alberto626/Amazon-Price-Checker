@@ -121,21 +121,10 @@ public class MainController {
         //add all database stuff to add Attribute
         return "demo"; //go to template name
     }
-    @Scheduled(fixedRate = 25000) //uncomment this to test this
-    public void sendMessage() {//THIS IS PURELY FOR TESTING PURPOSES
-
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(toSend);
-        message.setSubject("subject");
-        message.setText("Hello world");
-        javaMailSender.send(message);
-
-    }
-    //@Scheduled(cron = "0 0 8 * *")// every day at 8
+    @Scheduled(cron = "0 0 8 * *")// every day at 8
     public void scheduledWebCall() {
         Iterable<User> i = userRepository.findAll();
         for(User u : i) {
-            //delay after x time to prevent getting banned
             try {
                 TimeUnit.MINUTES.sleep(5);// change timeout
                 String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36";
@@ -147,11 +136,11 @@ public class MainController {
                 if(findPrice(doc) < u.getPrice()) {
                     MimeMessage msg = javaMailSender.createMimeMessage();
                     MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+                    helper.setTo(toSend);
                     helper.setSubject("SALE!!");
                     helper.setText("<a href = '" + u.getUrl() + "'>" + u.getTitle() + "</a>");
                     javaMailSender.send(msg);
                 }
-                //do nothing
             }
             catch(Exception ex) {
 

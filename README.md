@@ -10,10 +10,10 @@ Taking much longer than expected.
 - Fix spring from caching static images and preventing new images from being displayed
 - Debug naming conventions on images unqiue to Primary KEY &check;
 
-Create an applications.properties in resources directory to make it run on your computer, make sure to have mysql installed
+Create an applications.properties in resources directory to make it run on your computer, make sure to have mysql installed and make sure to have the following changes
 
 <pre>
-spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.hibernate.ddl-auto=#https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#configurations-hbmddl
 spring.datasource.url=   example: jdbc:mysql://localhost:3306/#yourschema
 spring.datasource.username= #your mysql name
 spring.datasource.password= #password
@@ -25,7 +25,7 @@ spring.mail.port=587
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.timeout=5000
 spring.mail.properties.mail.smtp.starttls.enable=true
-toSend = //an email to send to
-spring.mail.username= #an email sending
+toSend = #an email to send to
+spring.mail.username= #email Sender
 spring.mail.password= #sender password
 </pre>
