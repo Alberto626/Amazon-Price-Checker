@@ -1,11 +1,13 @@
 # Amazon-Price-Checker
-Taking much longer than expected.
+This application Works
+</br>
+Road make to make this better
 - Finish front end, display data to html page using thymeleaf &check;
 - add bootstrap to have a cleaner front end.(Low prio)
 - add delete function in main controller &check;
 - Finish url validation, must include duplicate website
 - Learn if website is open to sql injection
-- add scheduled method to webscrape website
+- add scheduled method to webscrape website &check;
 - add secrets management .env file
 - Fix spring from caching static images and preventing new images from being displayed
 - Debug naming conventions on images unqiue to Primary KEY &check;
@@ -14,7 +16,7 @@ Create an applications.properties in resources directory to make it run on your 
 
 <pre>
 spring.jpa.hibernate.ddl-auto=#https://docs.jboss.org/hibernate/orm/5.4/userguide/html_single/Hibernate_User_Guide.html#configurations-hbmddl
-spring.datasource.url=   example: jdbc:mysql://localhost:3306/#yourschema
+spring.datasource.url=#jdbc:mysql://localhost:3306/#yourschema
 spring.datasource.username= #your mysql name
 spring.datasource.password= #password
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
