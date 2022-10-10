@@ -1,7 +1,7 @@
 # Amazon-Price-Checker
 This application Works
 </br>
-Road make to make this better
+Road map to make this better
 - Finish front end, display data to html page using thymeleaf &check;
 - add bootstrap to have a cleaner front end.(Low prio)
 - add delete function in main controller &check;
